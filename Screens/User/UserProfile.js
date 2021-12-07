@@ -4,7 +4,7 @@ import { Container } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-import axios from "axios";
+import Axios from "axios";
 import baseURL from "../../assets/common/baseUrl";
 
 import AuthGlobal from "../../Context/store/AuthGlobal";
@@ -24,13 +24,12 @@ const UserProfile = (props) => {
         props.navigation.navigate("Login");
       }
 
+      // console.log(context.stateUser.user.userId);
       AsyncStorage.getItem("jwt")
         .then((res) => {
-          axios
-            .get(`${baseURL}users/${context.stateUser.user.id}`, {
-              headers: { Authorization: `Bearer ${res}` },
-            })
-            .then((user) => setUserProfile(user.data));
+          Axios.get(`${baseURL}users/${context.stateUser.user.userId}`, {
+            headers: { Authorization: `Bearer ${res}` },
+          }).then((user) => setUserProfile(user.data));
         })
         .catch((error) => console.log(error));
 
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 40,
   },
   order: {
     marginTop: 20,

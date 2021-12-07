@@ -19,7 +19,12 @@ export const loginUser = (user, dispatch) => {
       if (data) {
         const token = data.token;
         AsyncStorage.setItem("jwt", token);
+        // console.log(token);
+        // console.log(
+        //   "------------------------------------------------------------"
+        // );
         const decoded = jwt_decode(token);
+        // console.log(decoded);
         dispatch(setCurrentUser(decoded, user));
       } else {
         logoutUser(dispatch);
