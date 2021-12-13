@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Left, Right, Container, H1 } from "native-base";
 import Toast from "react-native-toast-message";
+import MutableButton from "../../Shared/StyledComponents/MutableButton";
+import StatusViewer from "../../Shared/StyledComponents/StatusViewer";
 
 import { connect } from "react-redux";
 import * as actions from "../../Redux/Actions/cartActions";
@@ -17,6 +19,24 @@ const SingleProduct = (props) => {
   const [item, setItem] = useState(props.route.params.item);
   const [availability, setAvailability] = useState(null);
   const [availabilityText, setAvailabilityText] = useState("");
+
+  useEffect(() => {
+    if (props.route.params.item.countInStock == 0) {
+      setAvailability(<StatusViewer unavailable></StatusViewer>);
+      setAvailabilityText("Unvailable");
+    } else if (props.route.params.item.countInStock <= 5) {
+      setAvailability(<StatusViewer limited></StatusViewer>);
+      setAvailabilityText("Limited Stock");
+    } else {
+      setAvailability(<StatusViewer available></StatusViewer>);
+      setAvailabilityText("Available");
+    }
+
+    return () => {
+      setAvailability(null);
+      setAvailabilityText("");
+    };
+  }, []);
 
   return (
     <Container style={styles.container}>
@@ -36,7 +56,15 @@ const SingleProduct = (props) => {
           <H1 style={styles.contentHeader}>{item.name}</H1>
           <Text style={styles.contentText}>{item.brand}</Text>
         </View>
-        {/*ToDO Rich desp, Avail */}
+        <View style={styles.availabilityContainer}>
+          <View style={styles.availability}>
+            <Text style={{ marginRight: 10 }}>
+              Availability: {availabilityText}
+            </Text>
+            {availability}
+          </View>
+          <Text>{item.description}</Text>
+        </View>
       </ScrollView>
 
       <View style={styles.bottomContainer}>
@@ -44,8 +72,9 @@ const SingleProduct = (props) => {
           <Text style={styles.price}>₹{item.price.toFixed(2)}</Text>
         </Left>
         <Right>
-          <Button
-            title="Add To Cart"
+          <MutableButton
+            primary
+            medium
             onPress={() => {
               props.addItemToCart(item),
                 Toast.show({
@@ -55,7 +84,9 @@ const SingleProduct = (props) => {
                   text2: "Proceed to cart to checkout",
                 });
             }}
-          />
+          >
+            <Text style={{ color: "white" }}>Add</Text>
+          </MutableButton>
         </Right>
       </View>
     </Container>
@@ -115,6 +146,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 20,
     color: "red",
+  },
+  availabilityContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  availability: {
+    flexDirection: "row",
+    marginBottom: 10,
   },
 });
 

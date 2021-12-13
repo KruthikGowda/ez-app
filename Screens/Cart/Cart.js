@@ -18,6 +18,7 @@ import {
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { SwipeListView } from "react-native-swipe-list-view";
+import MutableButton from "../../Shared/StyledComponents/MutableButton";
 
 const { height, width } = Dimensions.get("window");
 
@@ -61,13 +62,18 @@ const Cart = (props) => {
               <Text style={styles.price}>₹{total.toFixed(2)}</Text>
             </Left>
             <Right>
-              <Button title="Clear" onPress={() => props.clearCart()} />
+              <MutableButton medium danger onPress={() => props.clearCart()}>
+                <Text style={{ color: "white" }}>Clear</Text>
+              </MutableButton>
             </Right>
             <Right>
-              <Button
-                title="Checkout"
+              <MutableButton
+                medium
+                primary
                 onPress={() => props.navigation.navigate("Checkout")}
-              />
+              >
+                <Text style={{ color: "white" }}>Checkout</Text>
+              </MutableButton>
             </Right>
           </View>
         </Container>
